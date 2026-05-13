@@ -17,6 +17,12 @@ import time
 from bcc import BPF
 
 BPF_PROGRAM = r"""
+/* Workaround: kernels 6.10+ (Ubuntu 24.04+) referenciam struct bpf_wq em
+ * <linux/bpf.h> via funcoes inline com sizeof/__alignof, mas a definicao
+ * mora em kernel/bpf/ e nao e exportada nos headers que o BCC empacota.
+ * Stub vazio satisfaz o compilador; nao usamos bpf workqueues aqui. */
+struct bpf_wq {};
+
 #include <uapi/linux/ptrace.h>
 #include <linux/sched.h>
 #include <linux/fs.h>
